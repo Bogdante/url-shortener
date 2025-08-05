@@ -13,6 +13,7 @@ public class ActiveShortUrl {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "short_url_id", nullable = false, foreignKey = @ForeignKey(name = "fk_active_short_urls_short_urls"))
     private ShortUrl shortUrl;

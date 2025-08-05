@@ -21,6 +21,7 @@ public class ActiveShortUrlService {
         ActiveShortUrl activeShortUrl = new ActiveShortUrl();
         activeShortUrl.setFullUrl(shortUrl.getFullUrl());
         activeShortUrl.setShortUrlPathVariable(shortUrl.getShortUrlPathVariable());
+        activeShortUrl.setShortUrl(shortUrl);
 
         activeShortUrlRepository.save(activeShortUrl);
     }
