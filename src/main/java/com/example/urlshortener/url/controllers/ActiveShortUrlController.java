@@ -11,7 +11,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/")
 public class ActiveShortUrlController {
 

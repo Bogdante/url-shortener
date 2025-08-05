@@ -17,13 +17,12 @@ public class ShortUrl {
     private Long id;
 
     @Setter
-    @Size(min = 5, max = 65535)
+    @Size(min = 5, max = 1000)
     @Column(columnDefinition = "TEXT", nullable = false)
     private String fullUrl;
 
     @Setter
-    @Size(min = 5, max = 65535)
-    @Column(columnDefinition = "TEXT")
+    @Size(min = 5, max = 255)
     private String shortUrlPathVariable;
 
     @Setter

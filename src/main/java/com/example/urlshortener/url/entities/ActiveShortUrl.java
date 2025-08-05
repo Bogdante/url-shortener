@@ -18,13 +18,13 @@ public class ActiveShortUrl {
     private ShortUrl shortUrl;
 
     @Setter
-    @Size(min = 5, max = 65535)
+    @Size(min = 5, max = 1000)
     @Column(columnDefinition = "TEXT", nullable = false)
     private String fullUrl;
 
     @Setter
-    @Size(min = 5, max = 65535)
-    @Column(columnDefinition = "TEXT", unique = true)
+    @Size(min = 5, max = 255)
+    @Column(unique = true)
     private String shortUrlPathVariable;
 
 }
