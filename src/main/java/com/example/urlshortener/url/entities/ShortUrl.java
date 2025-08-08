@@ -25,7 +25,6 @@ public class ShortUrl {
     @Size(min = 5, max = 255)
     private String shortUrlPathVariable;
 
-    @Setter
     @Column(nullable = false)
     private long clickCount;
 

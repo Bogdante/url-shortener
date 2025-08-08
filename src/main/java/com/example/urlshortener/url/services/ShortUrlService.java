@@ -1,13 +1,12 @@
 package com.example.urlshortener.url.services;
 
+import com.example.urlshortener.base62.Base62;
 import com.example.urlshortener.common.AppConfig;
 import com.example.urlshortener.url.entities.ShortUrl;
 import com.example.urlshortener.url.repositories.ShortUrlRepository;
-import io.seruco.encoding.base62.Base62;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.nio.ByteBuffer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -25,12 +24,13 @@ public class ShortUrlService {
     public ShortUrlService(
             ShortUrlRepository shortUrlRepository,
             ActiveShortUrlService activeShortUrlService,
+            Base62 base62Encoder,
             AppConfig appConfig
     ) {
         this.shortUrlRepository = shortUrlRepository;
         this.activeShortUrlService =  activeShortUrlService;
         this.appConfig = appConfig;
-        this.base62Encoder = Base62.createInstance();
+        this.base62Encoder = base62Encoder;
     }
 
 
@@ -38,13 +38,13 @@ public class ShortUrlService {
     public ShortUrl createDefault(String fullUrl) {
         ShortUrl urlEntity = new ShortUrl();
         urlEntity.setFullUrl(fullUrl);
-        urlEntity.setValidUntil(getValidUntil(LocalDate.now()));
-        urlEntity = this.shortUrlRepository.save(urlEntity);
+        urlEntity.setValidUntil(getExpirationDate(LocalDate.now()));
+        urlEntity = shortUrlRepository.save(urlEntity);
 
-        urlEntity.setShortUrlPathVariable(encodeIdBase62(urlEntity.getId()));
-        this.activeShortUrlService.createForShortUrl(urlEntity);
+        urlEntity.setShortUrlPathVariable(base62Encoder.encode(urlEntity.getId()));
+        activeShortUrlService.createForShortUrl(urlEntity);
 
-        return this.shortUrlRepository.save(urlEntity);
+        return shortUrlRepository.save(urlEntity);
     }
 
     public long getMaxClickCount() {
@@ -55,15 +55,7 @@ public class ShortUrlService {
         return this.appConfig.getBaseUrl() + "/" + shortUrl.getShortUrlPathVariable();
     }
 
-    private LocalDateTime getValidUntil(LocalDate date) {
+    private LocalDateTime getExpirationDate(LocalDate date) {
         return date.plusDays(VALID_DAYS).atStartOfDay();
-    }
-
-    private String encodeIdBase62(Long id) {
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        buffer.putLong(id);
-        byte[] idBytes = buffer.array();
-        byte[] encodedBytes = this.base62Encoder.encode(idBytes);
-        return new String(encodedBytes);
     }
 }
