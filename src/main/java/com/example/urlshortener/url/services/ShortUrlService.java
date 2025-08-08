@@ -52,7 +52,7 @@ public class ShortUrlService {
     }
 
     public String generateShortUrlWithDomain(ShortUrl shortUrl) {
-        return this.appConfig.getBaseUrl() + "/" + shortUrl.getShortUrlPathVariable();
+        return this.appConfig.getBaseUrl() + shortUrl.getShortUrlPathVariable();
     }
 
     private LocalDateTime getExpirationDate(LocalDate date) {
