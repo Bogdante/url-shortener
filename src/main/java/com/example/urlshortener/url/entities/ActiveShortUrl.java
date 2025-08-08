@@ -24,7 +24,7 @@ public class ActiveShortUrl {
     private String fullUrl;
 
     @Setter
-    @Size(min = 5, max = 255)
+    @Size(min = 1, max = 255)
     @Column(unique = true)
     private String shortUrlPathVariable;
 

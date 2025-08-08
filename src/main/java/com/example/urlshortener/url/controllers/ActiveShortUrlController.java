@@ -24,7 +24,7 @@ public class ActiveShortUrlController {
     @GetMapping("/{shortUrlPathVariable}")
     public RedirectView redirectToFullUrl(
         @PathVariable
-        @Size(min = 5, max = 255)
+        @Size(min = 1, max = 255)
         String shortUrlPathVariable
     ) {
         Optional<String> fullUrl = this.activeShortUrlService.findFullUrl(shortUrlPathVariable);

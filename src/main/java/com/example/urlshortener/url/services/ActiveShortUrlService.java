@@ -12,9 +12,14 @@ import java.util.Optional;
 public class ActiveShortUrlService {
 
     private final ActiveShortUrlRepository activeShortUrlRepository;
+    private final RedisCacheService redisCacheService;
 
-    public ActiveShortUrlService(ActiveShortUrlRepository activeShortUrlRepository) {
+    public ActiveShortUrlService(
+            ActiveShortUrlRepository activeShortUrlRepository,
+            RedisCacheService redisCacheService
+    ) {
         this.activeShortUrlRepository = activeShortUrlRepository;
+        this.redisCacheService = redisCacheService;
     }
 
     public void createForShortUrl(ShortUrl shortUrl) {
@@ -27,7 +32,12 @@ public class ActiveShortUrlService {
     }
 
     public Optional<String> findFullUrl(String shortUrlPathVariable) {
-        Optional<ActiveShortUrl> url = this.activeShortUrlRepository
+        Optional<String> fullUrl = redisCacheService.get(shortUrlPathVariable);
+        if (fullUrl.isPresent()) {
+            return fullUrl;
+        }
+
+        Optional<ActiveShortUrl> url = activeShortUrlRepository
                 .findByShortUrlPathVariable(shortUrlPathVariable);
         return url.map(ActiveShortUrl::getFullUrl);
     }
