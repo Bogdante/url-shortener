@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ActiveShortUrlClickEvent {
-    private final ActiveShortUrl  activeShortUrl;
+    private final String  shortUrlPathVariable;
 }
