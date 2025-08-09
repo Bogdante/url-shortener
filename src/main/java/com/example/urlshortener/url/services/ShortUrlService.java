@@ -5,12 +5,14 @@ import com.example.urlshortener.common.AppConfig;
 import com.example.urlshortener.url.entities.ShortUrl;
 import com.example.urlshortener.url.repositories.ShortUrlRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
+@AllArgsConstructor
 public class ShortUrlService {
 
     private final static long CLICKS_LIMIT = 1000;
@@ -20,18 +22,6 @@ public class ShortUrlService {
     private final ShortUrlRepository shortUrlRepository;
     private final ActiveShortUrlService activeShortUrlService;
     private final Base62 base62Encoder;
-
-    public ShortUrlService(
-            ShortUrlRepository shortUrlRepository,
-            ActiveShortUrlService activeShortUrlService,
-            Base62 base62Encoder,
-            AppConfig appConfig
-    ) {
-        this.shortUrlRepository = shortUrlRepository;
-        this.activeShortUrlService =  activeShortUrlService;
-        this.appConfig = appConfig;
-        this.base62Encoder = base62Encoder;
-    }
 
     @Transactional
     public ShortUrl createDefault(String fullUrl) {
