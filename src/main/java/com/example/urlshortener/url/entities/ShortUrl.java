@@ -35,6 +35,7 @@ public class ShortUrl {
     @Column(name = "valid_until")
     private LocalDateTime validUntil;
 
+    @Setter
     @Column(columnDefinition = "BOOLEAN NOT NULL DEFAULT TRUE")
     private boolean isActive;
 

@@ -33,18 +33,34 @@ public class ShortUrlService {
         this.base62Encoder = base62Encoder;
     }
 
-
     @Transactional
     public ShortUrl createDefault(String fullUrl) {
         ShortUrl urlEntity = new ShortUrl();
         urlEntity.setFullUrl(fullUrl);
-        urlEntity.setValidUntil(getExpirationDate(LocalDate.now()));
+        urlEntity.setValidUntil(defineExpirationDate(LocalDate.now()));
         urlEntity = shortUrlRepository.save(urlEntity);
 
         urlEntity.setShortUrlPathVariable(base62Encoder.encode(urlEntity.getId()));
         activeShortUrlService.createForShortUrl(urlEntity);
 
         return shortUrlRepository.save(urlEntity);
+    }
+
+
+    public boolean isValid(ShortUrl shortUrl) {
+        LocalDateTime now = LocalDateTime.now();
+        return shortUrl.getClickCount() < getMaxClickCount()
+                && shortUrl.getValidUntil().isAfter(now);
+    }
+
+    public void deactivate(ShortUrl shortUrl) {
+        shortUrl.setActive(false);
+        shortUrlRepository.save(shortUrl);
+    }
+
+    public void addClicksCount(ShortUrl shortUrl) {
+        shortUrl.incrementClicksCount();
+        shortUrlRepository.save(shortUrl);
     }
 
     public long getMaxClickCount() {
@@ -55,7 +71,7 @@ public class ShortUrlService {
         return this.appConfig.getBaseUrl() + shortUrl.getShortUrlPathVariable();
     }
 
-    private LocalDateTime getExpirationDate(LocalDate date) {
+    private LocalDateTime defineExpirationDate(LocalDate date) {
         return date.plusDays(VALID_DAYS).atStartOfDay();
     }
 }
